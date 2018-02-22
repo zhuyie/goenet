@@ -44,3 +44,7 @@ func (a *ENetAddress) Host() string {
     }
     return C.GoString((*C.char)(hostName))
 }
+
+func (a *ENetAddress) Port() uint {
+    return uint(a.port)
+}
