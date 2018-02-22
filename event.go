@@ -1,10 +1,9 @@
 package goenet
 
 /*
-#cgo CFLAGS: -I/usr/local/include/enet
-#cgo LDFLAGS: -L/usr/local/lib -lenet
+#cgo CFLAGS: -Isrc/include
 
-#include "enet.h"
+#include "enet/enet.h"
 
 // tip from https://groups.google.com/d/msg/golang-nuts/WnA9F1cNDy0/-Rsd-hrjhOAJ
 static ENetEventType _go_event_get_type(ENetEvent *e) {
