@@ -27,14 +27,20 @@ func (a *ENetAddress) SetHostName(hostName string) int {
 	return int(C.enet_address_set_host((*C.ENetAddress)(a), hName))
 }
 
-func (a *ENetAddress) HostIp(hostName string, nameLength int) int {
-	hName := C.CString(hostName)
-	defer C.free(unsafe.Pointer(hName))
-	return int(C.enet_address_get_host_ip((*C.ENetAddress)(a), hName, C.size_t(nameLength)))
+func (a *ENetAddress) HostIp() string {
+    hostName := C.malloc(16)
+    defer C.free(hostName)
+    if C.enet_address_get_host_ip((*C.ENetAddress)(a), (*C.char)(hostName), 16) != 0 {
+        return ""
+    }
+    return C.GoString((*C.char)(hostName))
 }
 
-func (a *ENetAddress) Host(hostName string, nameLength int) int {
-	hName := C.CString(hostName)
-	defer C.free(unsafe.Pointer(hName))
-	return int(C.enet_address_get_host((*C.ENetAddress)(a), hName, C.size_t(nameLength)))
+func (a *ENetAddress) Host() string {
+	hostName := C.malloc(50)
+    defer C.free(hostName)
+    if C.enet_address_get_host((*C.ENetAddress)(a), (*C.char)(hostName), 50) != 0 {
+        return ""
+    }
+    return C.GoString((*C.char)(hostName))
 }
