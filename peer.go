@@ -19,16 +19,18 @@ func (p *ENetPeer) ConnectID() int {
     return int(p.connectID)
 }
 
-// SetData can set a reference to any arbitrary Go data.
-func (p *ENetPeer) SetData(data interface{}) {
-    p.data = unsafe.Pointer(&data)
+// SetData set a user data.
+//
+// https://golang.org/cmd/cgo/
+// The C code must preserve this property: it must not store any Go pointers in Go memory, even temporarily.
+//
+func (p *ENetPeer) SetData(data uint) {
+    p.data = unsafe.Pointer(uintptr(data))
 }
 
-// Data returns referenced Go data.  Must be dereferenced as a pointer.
-//
-//   peer.Data().(*MyType)
-func (p *ENetPeer) Data() interface{} {
-    return unsafe.Pointer(p.data)
+// Data returns the user data.
+func (p *ENetPeer) Data() uint {
+    return uint(uintptr(p.data))
 }
 
 // Public
