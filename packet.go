@@ -13,10 +13,17 @@ import (
 
 type ENetPacket C.ENetPacket
 
-// Currently this method requires that the data be written in byte form.
-// Ideally it would be nice to write arbitrary data such as one can do in the C ENet library.
+func slice_to_cpointer(in []byte) unsafe.Pointer {
+	if len(in) == 0 {
+		return unsafe.Pointer(nil)
+	}
+	return unsafe.Pointer(&in[0])
+}
+
+// NewPacket create a ENetPacket.
+// data can be nil, when it not nil, make sure len(data) >= dataLength!
 func NewPacket(data []byte, dataLength int, flags ENetPacketFlag) *ENetPacket {
-	return (*ENetPacket)(C.enet_packet_create(unsafe.Pointer(&data[0]), C.size_t(dataLength), C.enet_uint32(flags)))
+	return (*ENetPacket)(C.enet_packet_create(slice_to_cpointer(data), C.size_t(dataLength), C.enet_uint32(flags)))
 }
 
 func (p *ENetPacket) Data() []byte {
