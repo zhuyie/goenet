@@ -44,7 +44,7 @@ func main() {
                     allPlayers[player.ID] = player
 
                     peer.SetData(uint(player.ID))
-                    log.Printf("Client connected: %d\n", peer.ConnectID())
+                    log.Printf("Client connected: ID=%d\n", player.ID)
                     break
 
                 case goenet.ENET_EVENT_TYPE_RECEIVE:
@@ -57,7 +57,7 @@ func main() {
                     length := event.Packet().DataLength()
                     packetData := string(event.Packet().Data())
                     channel := event.ChannelID()
-                    log.Printf("packet - length: %d, data: %s, channel: %d", length, packetData, channel)
+                    log.Printf("Packet received: ID=%d length=%d data=%s channel=%d", player.ID, length, packetData, channel)
                     peer.Send(channel, goenet.NewPacket([]byte(packetData), length, goenet.ENET_PACKET_FLAG_RELIABLE))
                     event.Packet().Destroy() // clean up
                     break
@@ -69,7 +69,7 @@ func main() {
                     player := allPlayers[playerID]
                     delete(allPlayers, playerID)
 
-                    log.Printf("Client disconnected: %d PacketCount=%d\n", peer.ConnectID(), player.PacketCount)
+                    log.Printf("Client disconnected: ID=%d PacketCount=%d\n", player.ID, player.PacketCount)
                     break
                 }
             }
